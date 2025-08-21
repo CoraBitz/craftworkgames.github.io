@@ -44,12 +44,12 @@ Readers should have a solid foundational skill in C# and an understanding of how
 ## Join our Community
 If you have any questions related to **MonoGame.Extended**, you are welcome to join one of our community hubs and ask questions:
 
-- [GitHub Discussions](https://github.com/craftworkgames/MonoGame.Extended/discussions)
+- [GitHub Discussions](https://github.com/MonoGame-Extended/MonoGame-Extended/discussions)
 - [MonoGame.Extended Discord](https://discord.gg/FvZ8Z7EzPJ)
 
 The maintainers are also active in the main [MonoGame Discord](https://discord.gg/monogame).
 
 ## Something Missing?
-If you discover any issues with the documentation or have suggestions for improvement, please create an issue in the [documentation GitHub repository](https://github.com/craftworkgames/craftworkgames.github.io) or join the [MonoGame.Extended Discord](https://discord.gg/FvZ8Z7EzPJ) and leave a message. Contributions to the documentation are encouraged and welcome; please read the [Contributing](/docs/about/contributing) document first.
+If you discover any issues with the documentation or have suggestions for improvement, please create an issue in the [documentation GitHub repository](https://github.com/monogame-extended/monogame-extended.github.io) or join the [MonoGame.Extended Discord](https://discord.gg/FvZ8Z7EzPJ) and leave a message. Contributions to the documentation are encouraged and welcome; please read the [Contributing](/docs/about/contributing) document first.
 
-For issues or feature requests in the **MonoGame.Extended** library itself, please open new requests on the [MonoGame.Extended GitHub](https://github.com/craftworkgames/MonoGame.Extended).
+For issues or feature requests in the **MonoGame.Extended** library itself, please open new requests on the [MonoGame.Extended GitHub](https://github.com/MonoGame-Extended/MonoGame-Extended).

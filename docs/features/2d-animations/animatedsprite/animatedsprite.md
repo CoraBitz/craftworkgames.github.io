@@ -11,7 +11,7 @@ import AttackNoIdle from './attack_no_idle.gif'
 import EventTrigger from './event_trigger.gif'
 
 :::tip[Up to date]
-This page is **up to date** for MonoGame.Extended `@mgeversion@`.  If you find outdated information, [please open an issue](https://github.com/craftworkgames/craftworkgames.github.io/issues).
+This page is **up to date** for MonoGame.Extended `@mgeversion@`.  If you find outdated information, [please open an issue](https://github.com/monogame-extended/monogame-extended.github.io/issues).
 :::
 
 In the [previous document](/docs/features/2d-animations/spritesheet/spritesheet.md) about `SpriteSheets` we went over how to create a `SpriteSheet`, define animations, and retrieve the animations from it.  Doing this only gives us the `SpriteSheetAnimation` instance for that animation, which we then have to create an `AnimationController` with to manage that single animation.

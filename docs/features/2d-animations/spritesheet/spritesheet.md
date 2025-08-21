@@ -10,7 +10,7 @@ import AdventurerAttackFrames from './attack-frames.png'
 import AttackAnimation from './attack_animation.gif'
 
 :::tip[Up to date]
-This page is **up to date** for MonoGame.Extended `@mgeversion@`.  If you find outdated information, [please open an issue](https://github.com/craftworkgames/craftworkgames.github.io/issues).
+This page is **up to date** for MonoGame.Extended `@mgeversion@`.  If you find outdated information, [please open an issue](https://github.com/monogame-extended/monogame-extended.github.io/issues).
 :::
 
 A `SpriteSheet` is a wrapper around a [Texture2DAtlas](/docs/features/texture-handling/texture2datlas/texture2datlas.md) that provides additional methods for defining frame based animations based on the regions within the `Texture2DAtlas`.  

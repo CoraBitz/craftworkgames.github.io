@@ -11,7 +11,7 @@ import ResultScreenShot from './result.png'
 import SpritesheetImage from './spritesheet.png'
 
 :::tip[Up to date]
-This page is **up to date** for MonoGame.Extended `@mgeversion@`.  If you find outdated information, [please open an issue](https://github.com/craftworkgames/craftworkgames.github.io/issues).
+This page is **up to date** for MonoGame.Extended `@mgeversion@`.  If you find outdated information, [please open an issue](https://github.com/monogame-extended/monogame-extended.github.io/issues).
 :::
 
 In the [previous](../texture2dregion/texture2dregion.md) article we discussed what a `Texture2DRegion` is.  When you combine all the texture regions into a single collection, this is called a texture atlas. By using a texture atlas it gives us an easy way to create and manage our collection of regions
