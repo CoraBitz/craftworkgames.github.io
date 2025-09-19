@@ -10,6 +10,9 @@ Hi everyone,
 
 Quick update that MonoGame Extended version 5.1.0 has been released.  This release brings some updates to the particle system refactor that was done as part of the 5.0.0 release.  After working through through updating the particle documentation, I noticed that some of the implementations seemed off or didn't work as expected, so in tandem with documenting, I also did some updates.
 
+- GitHub: [https://github.com/monogame-extended/monogame-extended](https://github.com/monogame-extended/monogame-extended)
+- Release Notes: [https://github.com/MonoGame-Extended/Monogame-Extended/releases/tag/v5.1.0](https://github.com/MonoGame-Extended/Monogame-Extended/releases/tag/v5.1.0)
+
 ## What's Changed
 
 ### Load Ember Particle Effects From File/Stream
