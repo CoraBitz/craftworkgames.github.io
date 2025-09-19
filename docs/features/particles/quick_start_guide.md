@@ -461,7 +461,6 @@ Particle systems can impact performance with thousands of particles. Consider th
 
 Now that you have particles working, you're ready to dive deeper:
 
-- **[Core Concepts](/docs/features/particles/core-concepts)** - Understand how the particle system works under the hood
-- **[Emission Profiles](/docs/features/particles/emission-profiles)** - Learn about different ways to emit particles
-- **[Modifiers](/docs/features/particles/modifiers)** - Discover all the ways to control particle behavior
-- **[Interpolators](/docs/features/particles/interpolators)** - Create smooth property transitions over particle lifetimes.
+- **[Emission Profiles](./emission_profiles.md)** - Learn about different ways to emit particles
+- **[Modifiers](./modifiers.md)** - Discover all the ways to control particle behavior
+- **[Interpolators](./interpolators.md)** - Create smooth property transitions over particle lifetimes.
