@@ -47,7 +47,7 @@ Reference: [https://github.com/MonoGame-Extended/Monogame-Extended/pull/1031](ht
 
 ## Conclusion
 
-With this release done and the documentation completed for the particle system, I can now focus on finishing up the documentation for the Ember Particle Editor to so we can do an official release of it.  If you want to read the new documentation on particles, you can start with the [Quick Start Guide](../../../docs/features/particles/quick_start_guide.md).
+With this release done and the documentation completed for the particle system, I can now focus on finishing up the documentation for the Ember Particle Editor to so we can do an official release of it.  If you want to read the new documentation on particles, you can start with the [Quick Start Guide](../../../docs/features/particles/quick_start).
 
 Once Ember documentation is completed and a full release made, the particle system will go into maintenance mode while focus is shifted to work on tne tile map system in MonoGame Extended.  Hope you all are looking forward to that.
 
