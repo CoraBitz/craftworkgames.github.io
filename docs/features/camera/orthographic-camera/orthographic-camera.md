@@ -555,8 +555,6 @@ if (_camera.BoundingRectangle.Contains(_enemy.Position))
 - **`MinimumZoom`** - Gets or sets the minimum allowed zoom level
 - **`MaximumZoom`** - Gets or sets the maximum allowed zoom level
 
-This camera type creates a view with no depth perception.  Exactly what is wanted for a 2D game.  Below are some of the common actions you might want to take with the camera.  There are many other methods and attributes on the class you can use and modify to get different behavior.
-
 ## Further Reading
 
 - [Matrix Basics](https://stevehazen.wordpress.com/2010/02/15/matrix-basics-how-to-step-away-from-storing-an-orientation-as-3-angles/)
