@@ -1,5 +1,5 @@
 ---
-slug: version-5-3-
+slug: version-5-3-0
 title: Version 5.3.0 Release - Bug fixes and improvements
 authors: aris
 tags: ['updates', 'releases', 'five-oh']
@@ -73,7 +73,7 @@ _camera.IsZoomClampedToWorldBounds = true;
 
 Once enabled, the camera automatically clamps its position so the viewport edges never extend beyond the world bounds. If the world is smaller than the viewport, the camera centers itself on the world. World bounds work seamlessly with the `LookAt` method, making it easy to follow a player while respecting level boundaries.
 
-For more information, reference the [Constraining Camera Movement with World Bounds](../../docs/features/camera/orthographic-camera/orthographic-camera.md#constraining-camera-movement-with-world-bounds) documentation.
+For more information, reference the [Constraining Camera Movement with World Bounds](../../../docs/features/camera/orthographic-camera/#constraining-camera-movement-with-world-bounds) documentation.
 
 Reference: [https://github.com/MonoGame-Extended/Monogame-Extended/issues/64](https://github.com/MonoGame-Extended/Monogame-Extended/issues/64)
 
