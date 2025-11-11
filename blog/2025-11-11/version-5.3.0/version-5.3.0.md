@@ -4,7 +4,6 @@ title: Version 5.3.0 Release - Bug fixes and improvements
 authors: aris
 tags: ['updates', 'releases', 'five-oh']
 enableComments: true
-draft: true
 ---
 
 import zoomToPointDesktop from './zoom-to-point-desktop.webm'
