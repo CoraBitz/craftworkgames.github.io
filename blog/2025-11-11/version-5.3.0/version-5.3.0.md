@@ -15,7 +15,7 @@ Version 5.3.0 focuses on resolving long standing community issues and implementi
 In the sections below you can find a breakdown of all of the changes that made it into this release.  As always, please provide any feedback or report any bugs that you might find.  
 
 - GitHub: [https://github.com/monogame-extended/monogame-extended](https://github.com/monogame-extended/monogame-extended)
-- Release Notes: [https://github.com/MonoGame-Extended/Monogame-Extended/releases/tag/v5.2.0](https://github.com/MonoGame-Extended/Monogame-Extended/releases/tag/v5.3.0)
+- Release Notes: [https://github.com/MonoGame-Extended/Monogame-Extended/releases/tag/v5.3.0](https://github.com/MonoGame-Extended/Monogame-Extended/releases/tag/v5.3.0)
 
 ## Math and Primitives Changes
 
