@@ -10,7 +10,7 @@ import zoomToPointDesktop from './zoom-to-point-desktop.webm'
 
 I'm excited to announce the release of MonoGame Extended 5.3.0! This update represents a significant step forward in the commitment to delivering a more stable library.
 
-Version 5.3.0 focuses on resolving long standing community issues and implementing features that have accumulated over time. While this release doesn't include the comprehensive Tiled and tile map system overhaul (which remains the next major milestone), I prioritized delivering immediate value through bug fixes, API improvements, and new functionality that have been asking for.
+Version 5.3.0 focuses on resolving long standing community issues and implementing features that have accumulated over time. While this release doesn't include the comprehensive Tiled and tile map system overhaul (which remains the next major milestone), I prioritized delivering immediate value through bug fixes, API improvements, and new functionality that have been asked for.
 
 In the sections below you can find a breakdown of all of the changes that made it into this release.  As always, please provide any feedback or report any bugs that you might find.  
 
