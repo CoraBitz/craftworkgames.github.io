@@ -1,6 +1,6 @@
 ---
 slug: version-5-3-1
-title: Version 5.3.1 Release - GMFont Improvements
+title: Version 5.3.1 Release - BMFont Improvements
 authors: aris
 tags: ['updates', 'releases', 'five-oh']
 enableComments: true
