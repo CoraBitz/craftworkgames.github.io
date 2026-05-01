@@ -123,6 +123,26 @@ That means:
 
 This makes collision behavior easier to inspect and easier to disable for unrelated groups of actors.
 
+### Broadphase Sizing
+
+Each `Layer` owns its own broadphase structure. When you use `SpatialHash`, that means different layers can use different cell sizes.
+
+This is allowed, but it has tradeoffs:
+
+- it does not usually change collision correctness
+- it can change candidate counts and query cost significantly
+- it makes tuning harder because each layer may behave differently under load
+
+As a default recommendation, start with the same `SpatialHash` size for all layers in one `CollisionWorld2D`, or at least keep them similar. This gives you a more predictable baseline and makes it easier to reason about performance across layer pairs.
+
+Use different sizes only when you have a clear reason, such as:
+
+- one layer has much smaller or denser actors than another
+- one layer is measured to perform better with a different cell size
+- you are deliberately tuning separate workloads after profiling
+
+If layers collide with each other frequently, similar broadphase settings are usually easier for consumers to understand and maintain.
+
 ## Migration From 5.5.1
 
 If you are coming from MonoGame.Extended 5.5.1, the most important changes are:

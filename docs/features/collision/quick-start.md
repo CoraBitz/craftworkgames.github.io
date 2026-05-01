@@ -138,6 +138,10 @@ If you need to inspect or change that behavior, use:
 - `DisableCollisionBetweenLayers(...)`
 - `IsCollisionEnabledBetweenLayers(...)`
 
+:::tip
+Start with the same `SpatialHash` cell size for all layers in one collision world unless you have a measured reason to tune them differently. Different sizes are allowed, but they can lead to uneven candidate counts and make performance tuning harder to reason about.
+:::
+
 ## Step 4: Query Collisions
 
 Call `QueryCollisions(...)` when you want collision results relative to one actor.
