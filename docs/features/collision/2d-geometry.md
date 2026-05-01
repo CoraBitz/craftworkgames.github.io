@@ -11,6 +11,12 @@ This feature is currently only available in the preview release **6.0.0-preview.
 
 The `MonoGame.Extended` namespace provides a set of 2D geometric types for bounding volumes, intersection tests, containment queries, ray casting, and distance computations. All types are value types (`struct`) with no internal allocation overhead. Collision queries delegate to the static `Collision2D` class, which contains allocation-free implementations grounded in standard computational geometry references.
 
+This page covers the low-level geometry layer only. If you want actor/world collision management with `ICollisionActor`, `CollisionShape2D`, `CollisionWorld2D`, named layers, or migration guidance from the older `IShapeF`-based workflow, see:
+
+- [Collision Overview](./collision.md)
+- [Collision Quick Start](./quick-start.md)
+- [Migration Guide](./migration.md)
+
 ## Bounding Volumes
 
 Five bounding volume types are available. Each supports containment testing, intersection testing, transformation, and translation.
@@ -458,6 +464,11 @@ ContainmentType result = Collision2D.ContainsAabbCircle(
 const float tolerance = Collision2D.Epsilon; // 1e-6f
 ```
 
+For world-level actor collision queries, broadphase filtering, and layer-based collision management, use the higher-level collision docs instead of building directly on this page's APIs:
+
+- [Collision Overview](./collision.md)
+- [Collision Quick Start](./quick-start.md)
+
 ---
 
 ## Performance Tips
@@ -514,3 +525,9 @@ if (!broadPhase.Intersects(queryBox))
 bool headHit = headBox.Intersects(queryBox);
 bool bodyHit = bodyBox.Intersects(queryBox);
 ```
+
+## What's Next
+
+- [Collision Overview](./collision.md) for the full 6.0 collision architecture
+- [Collision Quick Start](./quick-start.md) for the actor/world collision workflow
+- [Migrating from 5.5.1](./migration.md) if you are upgrading from the old `IShapeF`-based system

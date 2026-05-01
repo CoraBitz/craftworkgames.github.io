@@ -201,6 +201,18 @@ const collisionCategory = {
     {
       type: 'doc',
       id: 'features/collision/collision'
+    },
+    {
+      type: 'doc',
+      id: 'features/collision/quick-start'
+    },
+    {
+      type: 'doc',
+      id: 'features/collision/migration'
+    },
+    {
+      type: 'doc',
+      id: 'features/collision/2d-geometry'
     }
   ]
 }
