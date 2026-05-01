@@ -39,7 +39,6 @@ using MonoGame.Extended.Collisions.Layers;
 Each actor needs:
 
 - a stable `Id`
-- an optional `LayerName`
 - a `CollisionShape2D`
 
 `CollisionWorld2D` is query-oriented, so collision resolution happens in your game code rather than through actor callbacks.
@@ -56,8 +55,6 @@ public sealed class PlayerActor : ICollisionActor
     }
 
     public int Id { get; }
-
-    public string LayerName => CollisionWorld2D.DefaultLayerName;
 
     public Vector2 Position { get; private set; }
 
@@ -90,9 +87,6 @@ public sealed class WallActor : ICollisionActor
     }
 
     public int Id { get; }
-
-    public string LayerName => "walls";
-
     public CollisionShape2D Shape { get; }
 }
 ```
@@ -122,18 +116,24 @@ protected override void Initialize()
         BoundingBox2D.CreateFromPositionAndSize(new Vector2(96f, 40f), new Vector2(64f, 64f)));
 
     _collisionWorld.Insert(_player);
-    _collisionWorld.Insert(_wall);
+    _collisionWorld.Insert(_wall, "walls");
 }
 ```
 
 By default:
 
-- the default layer is named `default`
+- `Insert(actor)` uses the default layer named `default`
+- `Insert(actor, "layerName")` places the actor into a specific registered layer
+- inserting the same actor into the same world twice throws instead of reassigning it
 - new non-default layers enable self-collision automatically
 - new non-default layers also enable collision with the current default layer automatically
 
 If you need to inspect or change that behavior, use:
 
+- `Contains(...)`
+- `TryGetLayerName(...)`
+- `GetLayerName(...)`
+- `MoveToLayer(...)`
 - `EnableCollisionBetweenLayers(...)`
 - `DisableCollisionBetweenLayers(...)`
 - `IsCollisionEnabledBetweenLayers(...)`
@@ -157,7 +157,23 @@ foreach (CollisionEvent2D collision in _collisionWorld.QueryCollisions(_player, 
 
 If you only need overlap state, use `Intersects(...)` on the shapes directly instead of a result-returning query.
 
-## Step 5: Rebuild Dynamic Layers After Movement
+## Step 5: Inspect or Change Layer Membership
+
+Because `CollisionWorld2D` owns layer membership, inspection and reassignment happen through the world.
+
+For example:
+
+```cs
+if (_collisionWorld.TryGetLayerName(_player, out string currentLayer))
+{
+    if (currentLayer != "walls")
+        _collisionWorld.MoveToLayer(_player, "walls");
+}
+```
+
+Use `MoveToLayer(...)` when you want to reassign an actor that is already in the world. Do not call `Insert(...)` a second time for that purpose.
+
+## Step 6: Rebuild Dynamic Layers After Movement
 
 `CollisionWorld2D` does not have an `Update` method. If your actors move, update their `Shape` values and then rebuild any dynamic broadphase layers before querying again.
 

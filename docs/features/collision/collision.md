@@ -22,7 +22,7 @@ For most gameplay collision systems, start with the actor/world layer:
 
 - `ICollisionActor` defines the objects that participate in world queries
 - `CollisionShape2D` wraps the actor's collision shape without using `IShapeF`
-- `CollisionWorld2D` stores actors in named layers and provides candidate, collision, and pair queries
+- `CollisionWorld2D` stores actors in named layers, owns layer membership, and provides candidate, collision, and pair queries
 - `CollisionResult2D` returns overlap state, collision normal, penetration depth, and minimum translation vector
 
 If you are moving from MonoGame.Extended 5.5.1, read the [Migration Guide](./migration.md) after this page. If you want the step-by-step setup path for a new project, go to [Collision Quick Start](./quick-start.md).
@@ -76,7 +76,8 @@ Typical flow:
 3. Create one or more `Layer` instances.
 4. Register those layers with `CollisionWorld2D`.
 5. Enable the layer pairs that should collide.
-6. Insert actors and query collisions during gameplay.
+6. Insert actors into the default or named layers.
+7. Query collisions, inspect membership, or move actors between layers during gameplay as needed.
 
 The result of a narrowphase collision query is a `CollisionResult2D`. Its `MinimumTranslationVector` moves the receiving shape out of the other shape, which makes it suitable for simple overlap resolution.
 
@@ -122,6 +123,20 @@ That means:
 - broadphase candidates can be filtered out before narrowphase work runs
 
 This makes collision behavior easier to inspect and easier to disable for unrelated groups of actors.
+
+### World-Owned Membership
+
+In 6.0 preview, layer membership belongs to `CollisionWorld2D`, not to `ICollisionActor`.
+
+That means:
+
+- `Insert(actor)` places the actor into the default layer
+- `Insert(actor, "layerName")` places the actor into a specific registered layer
+- inserting the same actor into the same world twice is an error
+- `MoveToLayer(actor, "layerName")` is the explicit way to change membership
+- `Contains(...)`, `TryGetLayerName(...)`, and `GetLayerName(...)` let you inspect world-specific membership
+
+This keeps layer placement tied to the world that owns it and allows the same actor to participate in more than one collision world when needed.
 
 ### Broadphase Sizing
 

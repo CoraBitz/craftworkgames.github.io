@@ -45,7 +45,6 @@ In 6.0 preview, `ICollisionActor` exposes:
 public interface ICollisionActor
 {
     int Id { get; }
-    string LayerName { get; }
     CollisionShape2D Shape { get; }
 }
 ```
@@ -55,9 +54,9 @@ public interface ICollisionActor
 ```cs
 public sealed class PlayerActor : ICollisionActor
 {
-    public RectangleF Bounds { get; private set; }
-
     public string LayerName => "players";
+
+    public RectangleF Bounds { get; private set; }
 
     IShapeF ICollisionActor.Bounds => Bounds;
 }
@@ -78,8 +77,6 @@ public sealed class PlayerActor : ICollisionActor
 
     public int Id { get; }
 
-    public string LayerName => "players";
-
     public CollisionShape2D Shape { get; private set; }
 
     private Vector2 _position;
@@ -93,6 +90,8 @@ public sealed class PlayerActor : ICollisionActor
 ```
 
 The important change is that the actor now exposes a concrete `CollisionShape2D` instead of a shape through `IShapeF`.
+
+Layer membership is also no longer stored on the actor. `CollisionWorld2D` owns layer assignment when the actor is inserted.
 
 ## Step 2: Replace Old Collision Shapes with Bounding Volumes
 
@@ -307,12 +306,31 @@ collisionWorld.AddLayer("walls", wallLayer);
 collisionWorld.EnableCollisionBetweenLayers("players", "walls");
 ```
 
+If your old collision setup relied on actor-owned `LayerName` values, move that responsibility to world insertion:
+
+```cs
+collisionWorld.Insert(playerActor, "players");
+collisionWorld.Insert(wallActor, "walls");
+```
+
+If you need to inspect or change layer membership later, do that through the world:
+
+```cs
+if (collisionWorld.TryGetLayerName(playerActor, out string layerName) && layerName != "players")
+    collisionWorld.MoveToLayer(playerActor, "players");
+```
+
+`Insert(...)` is now an add operation, not a reassignment operation. If the actor is already present in that world, inserting it again throws instead of silently moving it.
+
 If your old collision setup relied on the default layer's implicit behavior, verify that the new explicit rule set matches what you intended.
 
 ## Common API Mappings
 
 | Old API | New API |
 |---------|---------|
+| `ICollisionActor.LayerName` | world-owned layer assignment through `CollisionWorld2D.Insert(...)` |
+| mutate `ICollisionActor.LayerName` to change membership | `CollisionWorld2D.MoveToLayer(...)` |
+| inspect actor layer through actor state | `CollisionWorld2D.TryGetLayerName(...)` or `CollisionWorld2D.GetLayerName(...)` |
 | `ICollisionActor.Bounds` | `ICollisionActor.Shape` |
 | `IShapeF` | explicit bounding volume types plus `CollisionShape2D` where needed |
 | `RectangleF` as actor collision bounds | `BoundingBox2D` |
@@ -330,9 +348,9 @@ If your old collision setup relied on the default layer's implicit behavior, ver
 ```cs
 public sealed class BoxActor : ICollisionActor
 {
-    public RectangleF Bounds { get; private set; }
-
     public string LayerName => "actors";
+
+    public RectangleF Bounds { get; private set; }
 
     IShapeF ICollisionActor.Bounds => Bounds;
 }
@@ -352,8 +370,6 @@ public sealed class BoxActor : ICollisionActor
     }
 
     public int Id { get; }
-
-    public string LayerName => "actors";
 
     public CollisionShape2D Shape { get; private set; }
 
