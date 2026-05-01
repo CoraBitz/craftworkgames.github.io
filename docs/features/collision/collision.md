@@ -90,6 +90,17 @@ foreach (CollisionEvent2D collision in world.QueryCollisions(playerActor, "walls
 
 For a full walkthrough, see [Collision Quick Start](./quick-start.md).
 
+### Why There Is No `Update()`
+
+`CollisionWorld2D` deliberately does not have an `Update()` method.
+
+That design keeps responsibilities separate:
+
+- your game code owns actor movement, state changes, and frame timing
+- `CollisionWorld2D` owns broadphase storage, layer rules, and collision queries
+
+This avoids hidden rebuild work and avoids guessing when actor movement for the current step is "done." Instead, the world exposes `RebuildDynamicLayers()` as an explicit synchronization point after you finish updating actor shapes and before you run the next set of queries.
+
 ## Shapes and Result Queries
 
 `CollisionShape2D` is a non-boxing wrapper for the actor/world layer. It can represent the currently supported collision shapes without using the old `IShapeF` abstraction.
@@ -157,6 +168,15 @@ Use different sizes only when you have a clear reason, such as:
 - you are deliberately tuning separate workloads after profiling
 
 If layers collide with each other frequently, similar broadphase settings are usually easier for consumers to understand and maintain.
+
+### Dynamic vs Static Layers
+
+Layers also control whether their broadphase is rebuilt during synchronization.
+
+- `Layer.IsDynamic = true` means the layer participates in rebuilds during `Layer.Reset()` or `CollisionWorld2D.RebuildDynamicLayers()`
+- `Layer.IsDynamic = false` means the layer skips that rebuild work
+
+Use dynamic layers for moving actors and static layers for fixed world geometry or other layers whose contents do not move after insertion.
 
 ## Migration From 5.5.1
 

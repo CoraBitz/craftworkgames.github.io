@@ -258,8 +258,7 @@ protected override void Update(GameTime gameTime)
 {
     UpdateActors(gameTime);
 
-    foreach (Layer layer in _collisionWorld.Layers.Values)
-        layer.Reset();
+    _collisionWorld.RebuildDynamicLayers();
 
     foreach (CollisionEvent2D collision in _collisionWorld.QueryCollisions(playerActor, "walls"))
         playerPosition += collision.Result.MinimumTranslationVector;
@@ -268,7 +267,9 @@ protected override void Update(GameTime gameTime)
 }
 ```
 
-One important difference is that `CollisionWorld2D` does not have its own `Update` method. Your game code updates actor state, refreshes shapes, rebuilds dynamic layers, and then performs queries.
+One important difference is that `CollisionWorld2D` does not have its own `Update` method. Your game code updates actor state, refreshes shapes, calls `RebuildDynamicLayers()`, and then performs queries.
+
+This is intentional. `CollisionWorld2D` is designed as a query-oriented service rather than a frame-step owner, so it does not guess when actor movement is finished for the current step.
 
 ## Step 6: Update Layer Rules
 

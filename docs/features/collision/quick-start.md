@@ -175,7 +175,9 @@ Use `MoveToLayer(...)` when you want to reassign an actor that is already in the
 
 ## Step 6: Rebuild Dynamic Layers After Movement
 
-`CollisionWorld2D` does not have an `Update` method. If your actors move, update their `Shape` values and then rebuild any dynamic broadphase layers before querying again.
+`CollisionWorld2D` does not have an `Update` method. That is intentional: the world is a query-oriented service, not a game-loop owner. Your game code decides when actor movement for the current step is complete, and then explicitly calls `RebuildDynamicLayers()` before running queries that need updated broadphase state.
+
+If your actors move, update their `Shape` values and then call `RebuildDynamicLayers()` before querying again.
 
 For example:
 
@@ -198,8 +200,7 @@ protected override void Update(GameTime gameTime)
 
     _player.Move(movement);
 
-    foreach (Layer layer in _collisionWorld.Layers.Values)
-        layer.Reset();
+    _collisionWorld.RebuildDynamicLayers();
 
     foreach (CollisionEvent2D collision in _collisionWorld.QueryCollisions(_player, "walls"))
         _player.Move(collision.Result.MinimumTranslationVector);
@@ -208,7 +209,45 @@ protected override void Update(GameTime gameTime)
 }
 ```
 
-`Layer.Reset()` rebuilds the broadphase when `Layer.IsDynamic` is `true`, which is the default.
+`RebuildDynamicLayers()` is a convenience method that calls `Layer.Reset()` on every registered layer. Each `Layer` rebuilds its broadphase only when `Layer.IsDynamic` is `true`, which is the default.
+
+This design keeps timing explicit. `CollisionWorld2D` does not try to guess when your frame's movement, layer changes, or shape updates are finished, which avoids hidden rebuild work and lets you control when queries see synchronized state.
+
+You do not need to rebuild every frame just because a frame happened.
+
+- rebuild after relevant actors in dynamic layers have moved or changed shape
+- rebuild before collision queries that need to see that updated broadphase state
+- skip the rebuild when nothing moved, or when you are not about to run queries that depend on the changed actors
+
+In other words, rebuilding is driven by state changes and query timing, not by the mere existence of a game loop tick.
+
+### Dynamic vs Non-Dynamic Layers
+
+`Layer.IsDynamic` controls whether that layer's broadphase is rebuilt during `Reset()` or `RebuildDynamicLayers()`.
+
+- dynamic layer: use this when actors in the layer can move after insertion
+- non-dynamic layer: use this when actors are effectively static after insertion
+
+Practical examples:
+
+- player, enemy, projectile, and moving trigger layers are usually dynamic
+- wall, tile-collision, and fixed obstacle layers are often non-dynamic
+
+Why this matters:
+
+- dynamic layers cost rebuild work, but keep broadphase queries aligned with moving actors
+- non-dynamic layers skip rebuild work, which is cheaper, but only makes sense when the actors in that layer are not changing position or shape
+
+For example, a static wall layer can opt out of rebuild work:
+
+```cs
+Layer wallLayer = new Layer(new SpatialHash(new SizeF(64f, 64f)))
+{
+    IsDynamic = false
+};
+```
+
+If you later move an actor in a non-dynamic layer, the broadphase will not automatically resync for that layer during `RebuildDynamicLayers()`, so queries can become stale. Use `IsDynamic = false` only for layers whose contents stay fixed after insertion.
 
 ## Querying Pairs
 
