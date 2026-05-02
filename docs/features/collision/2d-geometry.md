@@ -5,8 +5,8 @@ title: 2D Geometry
 description: Bounding volumes, geometric primitives, and collision queries for 2D games.
 ---
 
-:::note[Preview release]
-This feature is currently only available in the preview release **6.0.0-preview.1**. If you find outdated information, [please open an issue](https://github.com/monogame-extended/monogame-extended.github.io/issues).
+:::tip[Up to date]
+This page is **up to date** for MonoGame.Extended `@mgeversion@`. If you find outdated information, [please open an issue](https://github.com/monogame-extended/monogame-extended.github.io/issues).
 :::
 
 The `MonoGame.Extended` namespace provides a set of 2D geometric types for bounding volumes, intersection tests, containment queries, ray casting, and distance computations. All types are value types (`struct`) with no internal allocation overhead. Collision queries delegate to the static `Collision2D` class, which contains allocation-free implementations grounded in standard computational geometry references.

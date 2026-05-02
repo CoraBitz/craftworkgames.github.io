@@ -5,10 +5,8 @@ title: Migrating from MonoGame.Extended.Tiled
 description: A step-by-step guide for migrating from the legacy Tiled-only system to the new format-agnostic tilemap system.
 ---
 
-:::note[Preview release]
-This feature is currently only available in the preview release **6.0.0-preview.1**. If you find outdated information, [please open an issue](https://github.com/monogame-extended/monogame-extended.github.io/issues).
-
-Samples are available in the [`version/6.0.0` branch of MonoGame-Extended-Samples](https://github.com/MonoGame-Extended/MonoGame-Extended-Samples/tree/version/6.0.0/src/Tilemaps).
+:::tip[Up to date]
+This page is **up to date** for MonoGame.Extended `@mgeversion@`. If you find outdated information, [please open an issue](https://github.com/monogame-extended/monogame-extended.github.io/issues).
 :::
 
 The `MonoGame.Extended.Tiled` namespace has been deprecated in favor of the new `MonoGame.Extended.Tilemaps` system. The new system supports Tiled, LDtk, and Ogmo Editor through a single API and uses a simpler, `SpriteBatch`-based renderer.

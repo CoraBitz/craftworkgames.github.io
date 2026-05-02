@@ -5,8 +5,8 @@ title: Collision
 description: Actor/world collision management and low level 2D collision queries for MonoGame.Extended.
 ---
 
-:::note[Preview release]
-This feature is currently only available in the preview release >= **6.0.0-preview.5**. If you find outdated information, [please open an issue](https://github.com/monogame-extended/monogame-extended.github.io/issues).
+:::tip[Up to date]
+This page is **up to date** for MonoGame.Extended `@mgeversion@`. If you find outdated information, [please open an issue](https://github.com/monogame-extended/monogame-extended.github.io/issues).
 :::
 
 The MonoGame.Extended collision system in 6.0 is split into two layers:

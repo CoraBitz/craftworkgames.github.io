@@ -5,8 +5,8 @@ title: Collision Quick Start
 description: Get actor/world collision queries running with CollisionWorld2D in MonoGame.Extended 6.0 preview.
 ---
 
-:::note[Preview release]
-This feature is currently only available in the preview release >= **6.0.0-preview.5**. If you find outdated information, [please open an issue](https://github.com/monogame-extended/monogame-extended.github.io/issues).
+:::tip[Up to date]
+This page is **up to date** for MonoGame.Extended `@mgeversion@`. If you find outdated information, [please open an issue](https://github.com/monogame-extended/monogame-extended.github.io/issues).
 :::
 
 This guide shows the main 6.0 collision workflow built around `ICollisionActor`, `CollisionShape2D`, `Layer`, and `CollisionWorld2D`.

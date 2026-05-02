@@ -5,8 +5,8 @@ title: Migrating from MonoGame.Extended 5.5.1 Collision APIs
 description: A step-by-step guide for migrating from the legacy IShapeF-based collision system to the MonoGame.Extended 6.0 preview collision APIs.
 ---
 
-:::note[Preview release]
-This feature is currently only available in the preview release >= **6.0.0-preview.5**. If you find outdated information, [please open an issue](https://github.com/monogame-extended/monogame-extended.github.io/issues).
+:::tip[Up to date]
+This page is **up to date** for MonoGame.Extended `@mgeversion@`. If you find outdated information, [please open an issue](https://github.com/monogame-extended/monogame-extended.github.io/issues).
 :::
 
 The MonoGame.Extended 6.0 collision system replaces the older `IShapeF`-based actor pipeline with explicit bounding volumes, `CollisionShape2D`, `CollisionResult2D`, and `CollisionWorld2D`.

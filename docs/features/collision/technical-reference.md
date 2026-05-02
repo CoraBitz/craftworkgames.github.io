@@ -5,8 +5,8 @@ title: Collision Technical Reference
 description: Architecture, query flow, layer lifecycle, and performance design for the MonoGame.Extended 6.0 collision system.
 ---
 
-:::note[Preview release]
-This feature is currently only available in the preview release >= **6.0.0-preview.5**. If you find outdated information, [please open an issue](https://github.com/monogame-extended/monogame-extended.github.io/issues).
+:::tip[Up to date]
+This page is **up to date** for MonoGame.Extended `@mgeversion@`. If you find outdated information, [please open an issue](https://github.com/monogame-extended/monogame-extended.github.io/issues).
 :::
 
 This document covers the technical architecture of the 6.0 collision system: how the low level geometry layer relates to the actor/world layer, how collision queries flow through broadphase and narrowphase, how layer membership and rebuild timing work, and where the current performance and result shape boundaries are.
