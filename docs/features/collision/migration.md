@@ -6,7 +6,7 @@ description: A step-by-step guide for migrating from the legacy IShapeF-based co
 ---
 
 :::note[Preview release]
-This feature is currently only available in the preview release **6.0.0-preview.1**. If you find outdated information, [please open an issue](https://github.com/monogame-extended/monogame-extended.github.io/issues).
+This feature is currently only available in the preview release >= **6.0.0-preview.5**. If you find outdated information, [please open an issue](https://github.com/monogame-extended/monogame-extended.github.io/issues).
 :::
 
 The MonoGame.Extended 6.0 collision system replaces the older `IShapeF`-based actor pipeline with explicit bounding volumes, `CollisionShape2D`, `CollisionResult2D`, and `CollisionWorld2D`.
@@ -15,17 +15,17 @@ If your 5.5.1 code used `ICollisionActor`, `IShapeF`, `Shape.Intersects(...)`, o
 
 ## What Changed and Why
 
-The 5.5.1 collision system stored actor bounds as `IShapeF` and used runtime type dispatch to figure out which shape-specific collision logic to run. That design made the collision hot path depend on interface-based storage and a legacy shared shape abstraction.
+The 5.5.1 collision system stored actor bounds as `IShapeF` and used runtime type dispatch to figure out which shape specific collision logic to run. That design made the collision hot path depend on interface based storage and a legacy shared shape abstraction.
 
 In 6.0 preview, the collision system moves to:
 
 - explicit bounding volume types such as `BoundingBox2D` and `BoundingCircle2D`
-- `CollisionShape2D` as the non-boxing actor/world shape wrapper
+- `CollisionShape2D` as the non boxing actor/world shape wrapper
 - `CollisionResult2D` for overlap state and resolution data
-- `CollisionWorld2D` as the primary query-oriented actor/world API
-- explicit named layer-pair rules instead of the older implicit collision model
+- `CollisionWorld2D` as the primary query oriented actor/world API
+- explicit named layer pair rules instead of the older implicit collision model
 
-This makes the chosen collision shape visible in the API surface, reduces hidden dispatch in the actor/world path, and gives callers direct access to minimum-translation-vector data where supported.
+This makes the chosen collision shape visible in the API surface, reduces hidden dispatch in the actor/world path, and gives callers direct access to minimum translation vector data where supported.
 
 ## Step 1: Replace `IShapeF Bounds` with `CollisionShape2D Shape`
 
@@ -67,6 +67,13 @@ public sealed class PlayerActor : ICollisionActor
 ```cs
 public sealed class PlayerActor : ICollisionActor
 {
+    private Vector2 _position;
+    private readonly Vector2 _size;
+
+    public int Id { get; }
+
+    public CollisionShape2D Shape { get; private set; }
+
     public PlayerActor(int id, Vector2 position, Vector2 size)
     {
         Id = id;
@@ -75,12 +82,6 @@ public sealed class PlayerActor : ICollisionActor
         UpdateShape();
     }
 
-    public int Id { get; }
-
-    public CollisionShape2D Shape { get; private set; }
-
-    private Vector2 _position;
-    private readonly Vector2 _size;
     private void UpdateShape()
     {
         BoundingBox2D bounds = BoundingBox2D.CreateFromPositionAndSize(_position, _size);
@@ -149,13 +150,13 @@ CollisionShape2D shape = new CollisionShape2D(newBounds);
 Choose an explicit substitute based on the behavior you need:
 
 - `BoundingCircle2D` for a circular approximation
-- `BoundingBox2D` for an axis-aligned enclosure
+- `BoundingBox2D` for an axis aligned enclosure
 - `OrientedBoundingBox2D` for a rotated box approximation
 - `BoundingPolygon2D` for a convex polygon approximation
 
 ## Step 3: Replace `Shape.Intersects(IShapeF, IShapeF)`
 
-The old shared interface-dispatch path has been removed.
+The old shared interface dispatch path has been removed.
 
 **Before:**
 
@@ -187,7 +188,7 @@ bool intersects = Collision2D.IntersectsCircleAabb(
 
 Use `CollisionShape2D.Intersects(...)` when you are working in the actor/world collision layer. Use the bounding volume types or `Collision2D` directly when you are working in the low-level geometry layer.
 
-## Step 4: Replace Penetration-Vector-Only Logic with `CollisionResult2D`
+## Step 4: Replace Penetration Vector Only Logic with `CollisionResult2D`
 
 In 5.5.1, collision code often relied on a boolean overlap test plus the older callback penetration vector.
 
@@ -230,7 +231,7 @@ This is the main upgrade if your collision response needs more than a yes/no ans
 Use `CollisionWorld2D` when you want:
 
 - actor-by-actor collision queries
-- layer-pair collision queries
+- layer pair collision queries
 - explicit access to `CollisionEvent2D` and `CollisionPair2D`
 - direct use of `CollisionResult2D`
 
@@ -269,7 +270,7 @@ protected override void Update(GameTime gameTime)
 
 One important difference is that `CollisionWorld2D` does not have its own `Update` method. Your game code updates actor state, refreshes shapes, calls `RebuildDynamicLayers()`, and then performs queries.
 
-This is intentional. `CollisionWorld2D` is designed as a query-oriented service rather than a frame-step owner, so it does not guess when actor movement is finished for the current step.
+This is intentional. `CollisionWorld2D` is designed as a query oriented service rather than a frame step owner, so it does not guess when actor movement is finished for the current step.
 
 ## Step 6: Update Layer Rules
 
@@ -278,7 +279,7 @@ Layer behavior changed in an important way.
 In 5.5.1:
 
 - the default layer collided with itself and with all other layers
-- non-default layers collided with themselves automatically
+- non default layers collided with themselves automatically
 - the system was centered on implicit stored layer tuples
 
 In 6.0 preview:
@@ -329,7 +330,7 @@ If your old collision setup relied on the default layer's implicit behavior, ver
 
 | Old API | New API |
 |---------|---------|
-| `ICollisionActor.LayerName` | world-owned layer assignment through `CollisionWorld2D.Insert(...)` |
+| `ICollisionActor.LayerName` | world owned layer assignment through `CollisionWorld2D.Insert(...)` |
 | mutate `ICollisionActor.LayerName` to change membership | `CollisionWorld2D.MoveToLayer(...)` |
 | inspect actor layer through actor state | `CollisionWorld2D.TryGetLayerName(...)` or `CollisionWorld2D.GetLayerName(...)` |
 | `ICollisionActor.Bounds` | `ICollisionActor.Shape` |
@@ -362,6 +363,13 @@ public sealed class BoxActor : ICollisionActor
 ```cs
 public sealed class BoxActor : ICollisionActor
 {
+    private Vector2 _position;
+    private readonly Vector2 _size;
+
+    public int Id { get; }
+
+    public CollisionShape2D Shape { get; private set; }
+
     public BoxActor(int id, Vector2 position, Vector2 size)
     {
         Id = id;
@@ -370,12 +378,7 @@ public sealed class BoxActor : ICollisionActor
         UpdateShape();
     }
 
-    public int Id { get; }
 
-    public CollisionShape2D Shape { get; private set; }
-
-    private Vector2 _position;
-    private readonly Vector2 _size;
     private void UpdateShape()
     {
         Shape = new CollisionShape2D(
@@ -388,4 +391,5 @@ public sealed class BoxActor : ICollisionActor
 
 - [Collision Overview](./collision.md) for the 6.0 architecture and API roles
 - [Collision Quick Start](./quick-start.md) for the main `CollisionWorld2D` setup path
-- [2D Geometry](./2d-geometry.md) for the low-level bounding volume and `Collision2D` reference
+- [Collision Technical Reference](./technical-reference.md) for the architectural rationale behind the new query oriented design
+- [2D Geometry](./2d-geometry.md) for the low level bounding volume and `Collision2D` reference

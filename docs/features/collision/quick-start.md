@@ -6,7 +6,7 @@ description: Get actor/world collision queries running with CollisionWorld2D in 
 ---
 
 :::note[Preview release]
-This feature is currently only available in the preview release **6.0.0-preview.1**. If you find outdated information, [please open an issue](https://github.com/monogame-extended/monogame-extended.github.io/issues).
+This feature is currently only available in the preview release >= **6.0.0-preview.5**. If you find outdated information, [please open an issue](https://github.com/monogame-extended/monogame-extended.github.io/issues).
 :::
 
 This guide shows the main 6.0 collision workflow built around `ICollisionActor`, `CollisionShape2D`, `Layer`, and `CollisionWorld2D`.
@@ -16,7 +16,7 @@ Use this path when you want:
 - explicit collision queries
 - named collision layers
 - access to `CollisionResult2D`
-- a collision system built on the new bounding-volume APIs instead of `IShapeF`
+- a collision system built on the new bounding volume APIs instead of `IShapeF`
 
 ## Prerequisites
 
@@ -46,13 +46,7 @@ Each actor needs:
 ```cs
 public sealed class PlayerActor : ICollisionActor
 {
-    public PlayerActor(int id, Vector2 position, Vector2 size)
-    {
-        Id = id;
-        Position = position;
-        _size = size;
-        UpdateShape();
-    }
+    private readonly Vector2 _size;
 
     public int Id { get; }
 
@@ -60,7 +54,13 @@ public sealed class PlayerActor : ICollisionActor
 
     public CollisionShape2D Shape { get; private set; }
 
-    private readonly Vector2 _size;
+    public PlayerActor(int id, Vector2 position, Vector2 size)
+    {
+        Id = id;
+        Position = position;
+        _size = size;
+        UpdateShape();
+    }
 
     public void Move(Vector2 delta)
     {
@@ -80,14 +80,15 @@ For a wall actor, the same pattern works:
 ```cs
 public sealed class WallActor : ICollisionActor
 {
+    public int Id { get; }
+    public CollisionShape2D Shape { get; }
+
     public WallActor(int id, BoundingBox2D bounds)
     {
         Id = id;
         Shape = new CollisionShape2D(bounds);
     }
 
-    public int Id { get; }
-    public CollisionShape2D Shape { get; }
 }
 ```
 
@@ -125,8 +126,8 @@ By default:
 - `Insert(actor)` uses the default layer named `default`
 - `Insert(actor, "layerName")` places the actor into a specific registered layer
 - inserting the same actor into the same world twice throws instead of reassigning it
-- new non-default layers enable self-collision automatically
-- new non-default layers also enable collision with the current default layer automatically
+- new non default layers enable self collision automatically
+- new non default layers also enable collision with the current default layer automatically
 
 If you need to inspect or change that behavior, use:
 
@@ -155,7 +156,7 @@ foreach (CollisionEvent2D collision in _collisionWorld.QueryCollisions(_player, 
 
 `collision.Result.MinimumTranslationVector` moves the queried actor out of the other actor. In this example, it moves `_player` out of the wall.
 
-If you only need overlap state, use `Intersects(...)` on the shapes directly instead of a result-returning query.
+If you only need overlap state, use `Intersects(...)` on the shapes directly instead of a result returning query.
 
 ## Step 5: Inspect or Change Layer Membership
 
@@ -167,7 +168,9 @@ For example:
 if (_collisionWorld.TryGetLayerName(_player, out string currentLayer))
 {
     if (currentLayer != "walls")
+    {
         _collisionWorld.MoveToLayer(_player, "walls");
+    }
 }
 ```
 
@@ -175,7 +178,7 @@ Use `MoveToLayer(...)` when you want to reassign an actor that is already in the
 
 ## Step 6: Rebuild Dynamic Layers After Movement
 
-`CollisionWorld2D` does not have an `Update` method. That is intentional: the world is a query-oriented service, not a game-loop owner. Your game code decides when actor movement for the current step is complete, and then explicitly calls `RebuildDynamicLayers()` before running queries that need updated broadphase state.
+`CollisionWorld2D` does not have an `Update` method. That is intentional: the world is a query oriented service, not a game loop owner. Your game code decides when actor movement for the current step is complete, and then explicitly calls `RebuildDynamicLayers()` before running queries that need updated broadphase state.
 
 If your actors move, update their `Shape` values and then call `RebuildDynamicLayers()` before querying again.
 
@@ -187,23 +190,33 @@ protected override void Update(GameTime gameTime)
     Vector2 movement = Vector2.Zero;
 
     if (Keyboard.GetState().IsKeyDown(Keys.Right))
+    {
         movement.X += 2f;
+    }
 
     if (Keyboard.GetState().IsKeyDown(Keys.Left))
+    {
         movement.X -= 2f;
+    }
 
     if (Keyboard.GetState().IsKeyDown(Keys.Down))
+    {
         movement.Y += 2f;
+    }
 
     if (Keyboard.GetState().IsKeyDown(Keys.Up))
+    {
         movement.Y -= 2f;
+    }
 
     _player.Move(movement);
 
     _collisionWorld.RebuildDynamicLayers();
 
     foreach (CollisionEvent2D collision in _collisionWorld.QueryCollisions(_player, "walls"))
+    {
         _player.Move(collision.Result.MinimumTranslationVector);
+    }
 
     base.Update(gameTime);
 }
@@ -221,22 +234,22 @@ You do not need to rebuild every frame just because a frame happened.
 
 In other words, rebuilding is driven by state changes and query timing, not by the mere existence of a game loop tick.
 
-### Dynamic vs Non-Dynamic Layers
+### Dynamic vs Non Dynamic Layers
 
 `Layer.IsDynamic` controls whether that layer's broadphase is rebuilt during `Reset()` or `RebuildDynamicLayers()`.
 
 - dynamic layer: use this when actors in the layer can move after insertion
-- non-dynamic layer: use this when actors are effectively static after insertion
+- non dynamic layer: use this when actors are effectively static after insertion
 
 Practical examples:
 
 - player, enemy, projectile, and moving trigger layers are usually dynamic
-- wall, tile-collision, and fixed obstacle layers are often non-dynamic
+- wall, tile collision, and fixed obstacle layers are often non dynamic
 
 Why this matters:
 
 - dynamic layers cost rebuild work, but keep broadphase queries aligned with moving actors
-- non-dynamic layers skip rebuild work, which is cheaper, but only makes sense when the actors in that layer are not changing position or shape
+- non dynamic layers skip rebuild work, which is cheaper, but only makes sense when the actors in that layer are not changing position or shape
 
 For example, a static wall layer can opt out of rebuild work:
 
@@ -247,7 +260,7 @@ Layer wallLayer = new Layer(new SpatialHash(new SizeF(64f, 64f)))
 };
 ```
 
-If you later move an actor in a non-dynamic layer, the broadphase will not automatically resync for that layer during `RebuildDynamicLayers()`, so queries can become stale. Use `IsDynamic = false` only for layers whose contents stay fixed after insertion.
+If you later move an actor in a non dynamic layer, the broadphase will not automatically resync for that layer during `RebuildDynamicLayers()`, so queries can become stale. Use `IsDynamic = false` only for layers whose contents stay fixed after insertion.
 
 ## Querying Pairs
 
@@ -278,11 +291,12 @@ This is useful when you want one pass over all collisions in a layer pair instea
 For many gameplay collision systems, `BoundingBox2D` is the simplest place to start.
 
 :::warning
-`CollisionShape2D.Intersects(...)` supports more shape pairs than `CollisionShape2D.TryGetCollision(...)`. If you need `CollisionResult2D`, verify that your shape pair supports result-returning queries in the current preview.
+`CollisionShape2D.Intersects(...)` supports more shape pairs than `CollisionShape2D.TryGetCollision(...)`. If you need `CollisionResult2D`, verify that your shape pair supports result returning queries in the current preview.
 :::
 
 ## What's Next
 
 - [Collision Overview](./collision.md) for the architecture and API roles
 - [Migrating from 5.5.1](./migration.md) if you are upgrading from the old `IShapeF`-based system
-- [2D Geometry](./2d-geometry.md) for the low-level bounding volume and `Collision2D` reference
+- [Collision Technical Reference](./technical-reference.md) for the deeper rationale behind world ownership, rebuild timing, and performance tradeoffs
+- [2D Geometry](./2d-geometry.md) for the low level bounding volume and `Collision2D` reference

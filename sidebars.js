@@ -212,6 +212,10 @@ const collisionCategory = {
     },
     {
       type: 'doc',
+      id: 'features/collision/technical-reference'
+    },
+    {
+      type: 'doc',
       id: 'features/collision/2d-geometry'
     }
   ]
